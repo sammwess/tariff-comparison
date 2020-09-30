@@ -3,9 +3,11 @@
   <ItemGroup>
     <ProjectReference Include="..\TariffComparison.Domain\TariffComparison.Domain.csproj" />
     <ProjectReference Include="..\TariffComparison.Tests\TariffComparison.Tests.csproj" />
+    <ProjectReference Include="..\TariffComparison.Infra\TariffComparison.Infra.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
   </ItemGroup>
 

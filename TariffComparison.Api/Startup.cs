@@ -1,8 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TariffComparison.Domain.Handlers;
+using TariffComparison.Domain.Repositories;
+using TariffComparison.Infra.Data;
+using TariffComparison.Tests.Mocks;
 
 namespace TariffComparison.Api
 {
@@ -20,6 +25,10 @@ namespace TariffComparison.Api
         {
             services.AddCors();
             services.AddControllers();
+            services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
+            services.AddScoped<DataContext, DataContext>();
+            services.AddTransient<ComparisonHandler, ComparisonHandler>();
+            services.AddTransient<IProductRepository, FakeProductRepository>();
             services.AddSwaggerGen(c => 
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Tariff Comparison", Version = "v1"});
