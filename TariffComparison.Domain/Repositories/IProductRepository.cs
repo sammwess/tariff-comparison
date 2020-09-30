@@ -10,5 +10,11 @@ namespace TariffComparison.Domain.Repositories
         /// </summary>
         /// <returns></returns>
         IList<Product> GetAll();
+
+        /// <summary>
+        /// Save new product
+        /// </summary>
+        /// <param name="product"></param>
+        void Save(Product product);
     }
 }

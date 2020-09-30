@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using TariffComparison.Domain.Handlers;
 using TariffComparison.Domain.Repositories;
 using TariffComparison.Infra.Data;
-using TariffComparison.Tests.Mocks;
+using TariffComparison.Infra.Repositories;
 
 namespace TariffComparison.Api
 {
@@ -25,12 +25,16 @@ namespace TariffComparison.Api
         {
             services.AddCors();
             services.AddControllers();
+            
             services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
+            
             services.AddScoped<DataContext, DataContext>();
             services.AddTransient<ComparisonHandler, ComparisonHandler>();
-            services.AddTransient<IProductRepository, FakeProductRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+            
             services.AddSwaggerGen(c => 
             {
+                c.EnableAnnotations();
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Tariff Comparison", Version = "v1"});
             });
         }

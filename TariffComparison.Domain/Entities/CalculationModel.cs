@@ -3,8 +3,11 @@ using TariffComparison.Shared.Entities;
 
 namespace TariffComparison.Domain.Entities
 {
-    public abstract class CalculationModel: Entity
+    public abstract class CalculationModel : Entity
     {
+
+        public CalculationModel() { }
+
         protected CalculationModel(decimal centkWh)
         {
             CentkWh = centkWh;

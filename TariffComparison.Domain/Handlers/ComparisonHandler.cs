@@ -10,7 +10,11 @@ using TariffComparison.Shared.Handlers;
 
 namespace TariffComparison.Domain.Handlers
 {
-    public class ComparisonHandler : Notifiable, IHandler<CreateComparisonCommand>
+    public class ComparisonHandler 
+        : Notifiable, 
+        IHandler<CreateComparisonCommand>, 
+        IHandler<CreateBasicElectricityTariffProductCommand>,
+        IHandler<CreatePackagedTariffProductCommand>
     {
         private readonly IProductRepository _repository;
 
@@ -74,6 +78,80 @@ namespace TariffComparison.Domain.Handlers
             result.Products = result.Products.OrderBy(p => p.AnnualCosts).ToArray();
             result.Success = true;
             return result;
+        }
+
+        public ICommandResult Handle(CreateBasicElectricityTariffProductCommand command)
+        {
+            if (Invalid)
+            {
+                AddNotifications(command);
+                return new CommandResult(false, "An error occurred, It was not possible to create the product.");
+            }
+
+            command.Validate();
+            if (command.Invalid)
+            {
+                AddNotifications(command);
+                return new CommandResult(false, "Please inform all the fields");
+            }
+
+            // Creating new product
+            var model = new CalculationModelBasicElectricityTariff(command.CentkWh, command.BasicCostsPerMonth);
+            var product = new Product(command.Name, model);
+
+            // Adding notifications
+            AddNotifications(model);
+            AddNotifications(product);
+
+            // Verifying if is valid
+            if (Invalid)
+            {
+                AddNotifications(command);
+                return new CommandResult(false, "An error occurred, It was not possible to create the product.");
+            }
+
+            // Saving
+            _repository.Save(product);
+
+            // Retornar o resultado positivo
+            return new CommandResult(true, "Product successfuly created.");
+        }
+
+        public ICommandResult Handle(CreatePackagedTariffProductCommand command)
+        {
+            if (Invalid)
+            {
+                AddNotifications(command);
+                return new CommandResult(false, "An error occurred, It was not possible to create the product.");
+            }
+
+            command.Validate();
+            if (command.Invalid)
+            {
+                AddNotifications(command);
+                return new CommandResult(false, "Please inform all the fields");
+            }
+
+            // Creating new product
+            var model = new CalculationModelPackagedTariff(command.CentkWh, command.BasicCostsPerYear, command.BasicConsumption);
+            var product = new Product(command.Name, model);
+
+            // Adding notifications
+            AddNotifications(model);
+            AddNotifications(product);
+
+            // Verifying if is valid
+            if (Invalid)
+            {
+                AddNotifications(command);
+                return new CommandResult(false, "An error occurred, It was not possible to create the product.");
+            }
+
+            // Saving
+            _repository.Save(product);
+
+            // Retornar o resultado positivo
+            return new CommandResult(true, "Product successfuly created.");
         }
     }
 }

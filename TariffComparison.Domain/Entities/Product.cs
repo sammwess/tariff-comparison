@@ -5,6 +5,9 @@ namespace TariffComparison.Domain.Entities
 {
     public class Product : Entity
     {
+
+        public Product() { }
+
         public Product(string name, CalculationModel calculationModel)
         {
             Name = name;

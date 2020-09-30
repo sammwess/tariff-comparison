@@ -32,5 +32,14 @@ namespace TariffComparison.Tests.Mocks
 
             return new List<Product> { productA, productB };
         }
+
+        /// <summary>
+        /// Save new product not implemented here in mock
+        /// </summary>
+        /// <param name="product"></param>
+        public void Save(Product product)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
